@@ -51,6 +51,31 @@ class _SeconScreenState extends State<SeconScreen> {
             },
             child: const Text('Open ScrollbarExp'),
           ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () async{ 
+              BuildContext currentContext = context;
+              GetListFromEpub getList = GetListFromEpub(name:'eliot-felix-holt-the-radical.epub');
+              var htmlAndTitle = await getList.parseEpubWithChapters(); 
+              List<String> htmlList =    htmlAndTitle.item1;          
+              String fullHtml = htmlList.last;
+              htmlList.length = htmlList.length-1;  
+              List<BookTitle> titles = htmlAndTitle.item2;
+              
+              // Use the captured context inside the async function.
+              if (!currentContext.mounted) return;
+              await Navigator.of(currentContext).push(MaterialPageRoute(
+                builder: (context) => ScrollBarExp2(
+                  data: htmlList,
+                  page: 1,
+                  location: 0,
+                  fullHtml: fullHtml,
+                  titles: titles,
+                ),
+              ));               
+            },
+            child: const Text('Open ScrollbarExp2'),
+          ),
         ],
       ),
     );
