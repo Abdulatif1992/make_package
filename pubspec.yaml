@@ -38,7 +38,8 @@ dependencies:
   html: ^0.15.4
   epub_reader_make_pages:
     path: ./epub_reader_make_pages/
-  path_provider: ^2.1.1  
+  path_provider: ^2.1.1
+  flutter_session_manager: ^1.0.3  
 
 dev_dependencies:
   flutter_test:

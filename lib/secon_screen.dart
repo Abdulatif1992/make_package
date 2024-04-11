@@ -3,6 +3,8 @@ import 'package:epub_reader_make_pages/epub_reader_make_pages.dart';
 import 'dart:io' as io;
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:make_package/models/books.dart';
 
 class SeconScreen extends StatefulWidget {
   const SeconScreen({super.key});
@@ -88,13 +90,24 @@ class _SeconScreenState extends State<SeconScreen> {
               htmlList.length = htmlList.length-1;  
               List<BookTitle> titles = htmlAndTitle.item2;
               
+              int page = 0;
+              double location = 0;
+
+              bool checker = await SessionManager().containsKey("10001");
+              if(checker)
+              {
+                HtmlBook book  = HtmlBook.fromJson( await SessionManager().get("10001"));
+                page = book.page!;
+                location = book.location;
+              }
               // Use the captured context inside the async function.
               if (!currentContext.mounted) return;
               await Navigator.of(currentContext).push(MaterialPageRoute(
                 builder: (context) => ScrollBarExp3(
+                  bookId: '10001',
                   data: htmlList,
-                  page: 1,
-                  location: 0,
+                  page: page,
+                  location: location,
                   fullHtml: fullHtml,
                   titles: titles,
                 ),
