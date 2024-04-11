@@ -30,7 +30,7 @@ class _SeconScreenState extends State<SeconScreen> {
           ElevatedButton(
             onPressed: () async{ 
               BuildContext currentContext = context;
-              GetListFromEpub getList = GetListFromEpub(name:'eliot-felix-holt-the-radical.epub');
+              GetListFromEpub getList = GetListFromEpub(name:'eliot-small.epub');
               var htmlAndTitle = await getList.parseEpubWithChapters(); 
               List<String> htmlList =    htmlAndTitle.item1;          
               String fullHtml = htmlList.last;
@@ -55,7 +55,7 @@ class _SeconScreenState extends State<SeconScreen> {
           ElevatedButton(
             onPressed: () async{ 
               BuildContext currentContext = context;
-              GetListFromEpub getList = GetListFromEpub(name:'eliot-felix-holt-the-radical.epub');
+              GetListFromEpub getList = GetListFromEpub(name:'eliot-small.epub');
               var htmlAndTitle = await getList.parseEpubWithChapters(); 
               List<String> htmlList =    htmlAndTitle.item1;          
               String fullHtml = htmlList.last;
@@ -76,6 +76,32 @@ class _SeconScreenState extends State<SeconScreen> {
             },
             child: const Text('Open ScrollbarExp2'),
           ),
+
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () async{ 
+              BuildContext currentContext = context;
+              GetListFromEpub getList = GetListFromEpub(name:'eliot-small.epub');
+              var htmlAndTitle = await getList.parseEpubWithChapters(); 
+              List<String> htmlList =    htmlAndTitle.item1;          
+              String fullHtml = htmlList.last;
+              htmlList.length = htmlList.length-1;  
+              List<BookTitle> titles = htmlAndTitle.item2;
+              
+              // Use the captured context inside the async function.
+              if (!currentContext.mounted) return;
+              await Navigator.of(currentContext).push(MaterialPageRoute(
+                builder: (context) => ScrollBarExp3(
+                  data: htmlList,
+                  page: 1,
+                  location: 0,
+                  fullHtml: fullHtml,
+                  titles: titles,
+                ),
+              ));               
+            },
+            child: const Text('Open ScrollbarExp3'),
+          ),
         ],
       ),
     );
@@ -86,7 +112,7 @@ class _SeconScreenState extends State<SeconScreen> {
     var dir = await getApplicationDocumentsDirectory();
 
     // Specify the asset file name
-    String filename = 'eliot-felix-holt-the-radical.epub';
+    String filename = 'eliot-small.epub';
     
     io.File file = io.File('${dir.path}/$filename');
     
