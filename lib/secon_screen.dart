@@ -15,6 +15,8 @@ class SeconScreen extends StatefulWidget {
 
 class _SeconScreenState extends State<SeconScreen> {
 
+  String name = 'eliot-small.epub';
+  String folder = 'eliot-small';
 
   @override
   Widget build(BuildContext context) {   
@@ -25,14 +27,14 @@ class _SeconScreenState extends State<SeconScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [ 
           ElevatedButton(
-            onPressed: () { saveFromAssetToLocal();},
+            onPressed: () { saveFromAssetToLocal(name, folder);},
             child: const Text('Save file to local'),
           ),  
           const SizedBox(height: 10), 
           ElevatedButton(
             onPressed: () async{ 
               BuildContext currentContext = context;
-              GetListFromEpub getList = GetListFromEpub(name:'eliot-small.epub');
+              GetListFromEpub getList = GetListFromEpub(name:name, folder: folder);
               var htmlAndTitle = await getList.parseEpubWithChapters(); 
               List<String> htmlList =    htmlAndTitle.item1;          
               String fullHtml = htmlList.last;
@@ -57,7 +59,7 @@ class _SeconScreenState extends State<SeconScreen> {
           ElevatedButton(
             onPressed: () async{ 
               BuildContext currentContext = context;
-              GetListFromEpub getList = GetListFromEpub(name:'eliot-small.epub');
+              GetListFromEpub getList = GetListFromEpub(name:name, folder: folder);
               var htmlAndTitle = await getList.parseEpubWithChapters(); 
               List<String> htmlList =    htmlAndTitle.item1;          
               String fullHtml = htmlList.last;
@@ -83,7 +85,7 @@ class _SeconScreenState extends State<SeconScreen> {
           ElevatedButton(
             onPressed: () async{ 
               BuildContext currentContext = context;
-              GetListFromEpub getList = GetListFromEpub(name:'eliot-small.epub');
+              GetListFromEpub getList = GetListFromEpub(name:name, folder: folder);
               var htmlAndTitle = await getList.parseEpubWithChapters(); 
               List<String> htmlList =    htmlAndTitle.item1;          
               String fullHtml = htmlList.last;
@@ -120,20 +122,36 @@ class _SeconScreenState extends State<SeconScreen> {
     );
   }
 
-  Future<void> saveFromAssetToLocal() async{
+  Future<void> saveFromAssetToLocal(String name, String folder) async{
     
-    var dir = await getApplicationDocumentsDirectory();
+    var dir = (await getApplicationDocumentsDirectory()).path;
+
+    await createFolder(dir, folder);
 
     // Specify the asset file name
-    String filename = 'eliot-small.epub';
+    String filename = name;
     
-    io.File file = io.File('${dir.path}/$filename');
+    io.File file = io.File('$dir/$folder/$filename');
     
 
     ByteData data = await rootBundle.load('assets/$filename');
     List<int> bytes = data.buffer.asUint8List();
 
     await file.writeAsBytes(bytes);
+  }
+
+  Future<void> createFolder(String path, String folderName) async {
+    // Create a Directory instance at the specified path
+    io.Directory newFolder = io.Directory('$path/$folderName');
+
+    // Check if the folder already exists
+    if (await newFolder.exists()) {
+      //print('Folder already exists');
+    } else {
+      // Create the folder
+      await newFolder.create();
+      //print('Folder created at $path/$folderName');
+    }
   }
 
 }
